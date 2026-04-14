@@ -1,0 +1,15 @@
+device: string
+section: string
+title: string
+source_pages: [int]
+extraction_confidence: enum(high,medium,low)
+content_completeness: enum(complete,partial,stub)
+related_parameters:
+  - id: string
+    role: string
+prerequisites: [string]
+see_also: [string]
+diagrams:
+  - filename: string
+    content_summary: string
+    source_page: int

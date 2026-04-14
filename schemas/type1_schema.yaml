@@ -1,0 +1,71 @@
+schema_version: "1.0"
+
+extraction_metadata:
+  source_page_basis: enum(pdf_file_1based,printed_manual)_or_null
+  source_page_note: string_or_null
+  scale_note: string_or_null
+  modbus_address_note: string_or_null
+
+device:
+  manufacturer: string
+  model: string
+  firmware: string_or_null
+  manual_source: string
+  manual_revision: string_or_null
+  manual_language: string
+  source_language: string_or_null
+  device_type: string
+  communication:
+    supported_protocols: [string]
+    modbus:
+      default_baud: int
+      default_slave_id: int
+      addressing: enum(0_based,1_based)
+      byte_order: enum(big_endian,little_endian)
+      word_order: enum(big_endian,little_endian)
+    ethercat:
+      vendor_id: string_or_null
+      product_code: string_or_null
+      revision: string_or_null
+
+groups:
+  - id: string
+    label: string
+
+parameters:
+  - id: string
+    name: string
+    group: string
+    brief: string
+    data_type: enum(uint16,int16,uint32,int32,float32,bool,string,bitfield)
+    access: enum(read_only,write_only,read_write)
+    source_page: int_or_null
+    range:
+      min: number
+      max: number
+    default: number_or_string_or_null
+    # null => 1:1 (identity); explicit number only when manual states a factor (e.g. 0.1 per LSB)
+    scale: number_or_null
+    unit: string_or_null
+    value_map: map_or_null # enum-style mappings like {0: "disabled", 1: "enabled"}; not for bitmasks
+    bit_layout: map_or_null # bit index string -> description when data_type is bitfield (Bit00/Bit01 style)
+    dependencies: [string]
+    write_condition: enum(any_state,stopped)_or_null
+    takes_effect: enum(immediate,power_cycle)_or_null
+    knowledge_ref: string_or_null
+    protocols:
+      modbus:
+        address: int # 16-bit index from ID: C GG.OO -> (G<<8)|O in hex nibble form
+        address_hex: string_or_null # e.g. 0x0013 for C00.13 (address 19 decimal)
+        table: enum(holding,input,coil,discrete)
+        register_count: int
+      ethercat:
+        index: int
+        subindex: int
+        pdo_mappable: bool
+
+rules:
+  - Extract every documented parameter.
+  - If description is missing, set brief to "No description in manual."
+  - If uncertain, use null/empty values instead of guessing.
+  - In Phase 1, set knowledge_ref to null for all parameters.
