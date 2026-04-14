@@ -83,43 +83,4 @@ The agent must collect or confirm:
 | Model | `X-100` |
 | Manual source filename | `X-100_user_manual.pdf` |
 
-### Run the pipeline yourself (optional)
-
-From a terminal, the orchestrator runs steps 1–9 (parse through spot-check) in one command. Paths below use the Unix skills location; on Windows, substitute `%USERPROFILE%\.cursor\skills\parse-manual` or an equivalent.
-
-**Full run (register-capable device)** — requires a generated extractor at `{device_dir}/.parse-cache/extract_registers_generated.py` when the default flow expects it (see `SKILL.md` Step 3):
-
-```bash
-python ~/.cursor/skills/parse-manual/scripts/run_skill.py \
-  --pdf "/path/to/manual.pdf" \
-  --device-dir "/path/to/ref/devices/my-device" \
-  --manufacturer "Acme" \
-  --model "X-100" \
-  --manual-source "manual.pdf"
-```
-
-**Knowledge-only device** (no registers):
-
-```bash
-python ~/.cursor/skills/parse-manual/scripts/run_skill.py \
-  --pdf "/path/to/manual.pdf" \
-  --device-dir "/path/to/ref/devices/my-device" \
-  --manufacturer "Acme" \
-  --model "X-100" \
-  --manual-source "manual.pdf" \
-  --skip-registers
-```
-
-Optional: add `--refine-knowledge` for a second pass on low-confidence knowledge files. Add `--force-parse` to re-run the Datalab parse even when `.parse-cache` exists.
-
-**Phase 2 only** (parse already done; rebuild knowledge, index, rules):
-
-```bash
-python ~/.cursor/skills/parse-manual/scripts/run_phase2_only.py \
-  --device-dir "/path/to/ref/devices/my-device" \
-  --manufacturer "Acme" \
-  --model "X-100" \
-  --manual-source "manual.pdf"
-```
-
-For step-by-step commands, acceptance criteria, validation, and guardrails, see **`SKILL.md`** in this folder.
+For the full agent workflow, orchestrator options, acceptance criteria, validation, and guardrails, see **`SKILL.md`** in this folder.
